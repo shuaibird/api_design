@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>title</title>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  </head>
+  <body>
+    <form>
+      <label for="name">NAME</label>
+      <input type="text" placeholder="name" required id="name">
+      <label for="age">AGE</label>
+      <input type="text" placeholder="age" required id="age">
+      <label for="title">TITLE</label>
+      <input type="text" placeholder="title" required id="title">
+      <button type="submit" id="submit">SUBMIT</button>
+    </form>
+    <script>
+      (function() {
+         $(function() {
+          $('#submit').click(function(evt) {
+            evt.preventDefault()
+            $.ajax({
+              url: '/items',
+              method: 'post',
+              data: {
+                name: $('#name').val(),
+                age: $('#age').val(),
+                title: $('#title').val()
+              },
+              success: function() {
+                $('input').val('')
+              }
+            })
+          })
+        })
+      })()
+    </script>
+  </body>
+</html>
