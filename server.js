@@ -1,5 +1,5 @@
 // middleware
-function incrementId() {
+function updateItemId() {
   return (req, res, next) => {
     ++itemId
     next()
@@ -38,7 +38,7 @@ app.get('/items/:id', (req, res) => {
   console.log(`GET /items/:${id}`)
 })
 
-app.post('/items', incrementId(), (req, res) => {
+app.post('/items', updateItemId(), (req, res) => {
   var item = req.body
   item.id = itemId
   items.push(item)
