@@ -26,8 +26,13 @@ var itemId = 0
 
 
 app.param('id', (req, res, next, id) => {
-  req.item = items.filter(item => item.id == id)[0]
-  next()
+  var item = items.filter(item => item.id == id)[0]
+  if (item) {
+    req.item = item
+    next()
+  } else {
+    res.send()
+  }
 })
 
 
@@ -39,7 +44,7 @@ app.get('/items', (req, res) => {
 
 app.get('/items/:id', (req, res) => {
   res.json(req.item)
-  console.log(`GET /items/:${id}`)
+  console.log(`GET /items/${req.item.id}`)
 })
 
 app.post('/items', updateItemId(), (req, res) => {
@@ -57,13 +62,13 @@ app.put('/items/:id', (req, res) => {
       Object.assign(item, updatedItem)
       res.json(item)
     }
-  console.log(`PUT /items/:${id}`)
+  console.log(`PUT /items/${req.item.id}`)
 })
 
 app.delete('/items/:id', (req, res) => {
   items = items.filter(item => item.id !== req.item.id)
   res.json(req.item)
-  console.log(`DELETE /items/:${id}`)
+  console.log(`DELETE /items/${req.item.id}`)
 })
 
 
