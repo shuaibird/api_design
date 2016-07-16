@@ -25,6 +25,12 @@ var items = []
 var itemId = 0
 
 
+app.param('id', (req, res, next, id) => {
+  req.item = items.filter(item => item.id == id)[0]
+  next()
+})
+
+
 // restful API
 app.get('/items', (req, res) => {
   res.json(items)
@@ -32,9 +38,7 @@ app.get('/items', (req, res) => {
 })
 
 app.get('/items/:id', (req, res) => {
-  var id = +req.params.id
-  var item = items.filter(item => item.id === id)[0]
-  res.json(item)
+  res.json(req.item)
   console.log(`GET /items/:${id}`)
 })
 
@@ -47,34 +51,25 @@ app.post('/items', updateItemId(), (req, res) => {
 })
 
 app.put('/items/:id', (req, res) => {
-  var id = +req.params.id
-  var putItem = req.body
+  var updatedItem = req.body
   for (let item of items)
-    if (item.id === id) {
-      Object.assign(item, putItem)
+    if (item.id === req.item.id) {
+      Object.assign(item, updatedItem)
       res.json(item)
     }
   console.log(`PUT /items/:${id}`)
 })
 
 app.delete('/items/:id', (req, res) => {
-  var id = +req.params.id
-  var delItem
-  items = items.filter(item => {
-    if (item.id === id) {
-      delItem = item
-      return false
-    }
-    return true
-  })
-  res.json(delItem)
+  items = items.filter(item => item.id !== req.item.id)
+  res.json(req.item)
   console.log(`DELETE /items/:${id}`)
 })
+
 
 app.use((err, req, res, next) => {
   if (err)
     console.log(err)
 })
-
 
 app.listen(port, () => console.log(`listen on port: ${port}`))
