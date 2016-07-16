@@ -1,3 +1,12 @@
+// middleware
+function incrementId() {
+  return (req, res, next) => {
+    ++itemId
+    next()
+  }
+}
+
+
 var express = require('express')
 var bodyParser = require('body-parser')
 
@@ -5,7 +14,7 @@ var app = express()
 var port = 8080
 
 
-// middlewares: function
+// application-level middlewares: function
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -13,6 +22,7 @@ app.use(bodyParser.json())
 
 // mock database
 var items = []
+var itemId = 0
 
 
 // restful API
@@ -28,9 +38,9 @@ app.get('/items/:id', (req, res) => {
   console.log(`GET /items/:${id}`)
 })
 
-app.post('/items', (req, res) => {
+app.post('/items', incrementId(), (req, res) => {
   var item = req.body
-  item.id = +new Date()
+  item.id = itemId
   items.push(item)
   res.json(item)
   console.log('POST /items')
