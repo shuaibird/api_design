@@ -74,7 +74,7 @@ app.delete('/items/:id', (req, res) => {
 
 app.use((err, req, res, next) => {
   if (err)
-    console.log(err)
+    res.status(500).send(err)
 })
 
 app.listen(port, () => console.log(`listen on port: ${port}`))
