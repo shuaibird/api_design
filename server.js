@@ -42,39 +42,38 @@ itemsRouter.param('id', (req, res, next, id) => {
 
 
 // restful API
-itemsRouter.get('/', (req, res) => {
-  res.json(items)
-  console.log('GET /items')
-})
+itemsRouter.route('/')
+  .get((req, res) => {
+    res.json(items)
+    console.log('GET /items')
+  })
+  .post(updateItemId(), (req, res) => {
+    var item = req.body
+    item.id = itemId
+    items.push(item)
+    res.json(item)
+    console.log('POST /items')
+  })
 
-itemsRouter.get('/:id', (req, res) => {
-  res.json(req.item)
-  console.log(`GET /items/${req.item.id}`)
-})
-
-itemsRouter.post('/', updateItemId(), (req, res) => {
-  var item = req.body
-  item.id = itemId
-  items.push(item)
-  res.json(item)
-  console.log('POST /items')
-})
-
-itemsRouter.put('/:id', (req, res) => {
-  var updatedItem = req.body
-  for (let item of items)
-    if (item.id === req.item.id) {
-      Object.assign(item, updatedItem)
-      res.json(item)
-    }
-  console.log(`PUT /items/${req.item.id}`)
-})
-
-itemsRouter.delete('/:id', (req, res) => {
-  items = items.filter(item => item.id !== req.item.id)
-  res.json(req.item)
-  console.log(`DELETE /items/${req.item.id}`)
-})
+itemsRouter.route('/:id')
+  .get((req, res) => {
+    res.json(req.item)
+    console.log(`GET /items/${req.item.id}`)
+  })
+  .put((req, res) => {
+    var updatedItem = req.body
+    for (let item of items)
+      if (item.id === req.item.id) {
+        Object.assign(item, updatedItem)
+        res.json(item)
+      }
+    console.log(`PUT /items/${req.item.id}`)
+  })
+  .delete((req, res) => {
+    items = items.filter(item => item.id !== req.item.id)
+    res.json(req.item)
+    console.log(`DELETE /items/${req.item.id}`)
+  })
 
 
 app.use((err, req, res, next) => {
