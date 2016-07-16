@@ -20,12 +20,17 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
 
+// router
+var itemsRouter = express.Router()
+app.use('/items', itemsRouter)
+
+
 // mock database
 var items = []
 var itemId = 0
 
 
-app.param('id', (req, res, next, id) => {
+itemsRouter.param('id', (req, res, next, id) => {
   var item = items.filter(item => item.id == id)[0]
   if (item) {
     req.item = item
@@ -37,17 +42,17 @@ app.param('id', (req, res, next, id) => {
 
 
 // restful API
-app.get('/items', (req, res) => {
+itemsRouter.get('/', (req, res) => {
   res.json(items)
   console.log('GET /items')
 })
 
-app.get('/items/:id', (req, res) => {
+itemsRouter.get('/:id', (req, res) => {
   res.json(req.item)
   console.log(`GET /items/${req.item.id}`)
 })
 
-app.post('/items', updateItemId(), (req, res) => {
+itemsRouter.post('/', updateItemId(), (req, res) => {
   var item = req.body
   item.id = itemId
   items.push(item)
@@ -55,7 +60,7 @@ app.post('/items', updateItemId(), (req, res) => {
   console.log('POST /items')
 })
 
-app.put('/items/:id', (req, res) => {
+itemsRouter.put('/:id', (req, res) => {
   var updatedItem = req.body
   for (let item of items)
     if (item.id === req.item.id) {
@@ -65,7 +70,7 @@ app.put('/items/:id', (req, res) => {
   console.log(`PUT /items/${req.item.id}`)
 })
 
-app.delete('/items/:id', (req, res) => {
+itemsRouter.delete('/:id', (req, res) => {
   items = items.filter(item => item.id !== req.item.id)
   res.json(req.item)
   console.log(`DELETE /items/${req.item.id}`)
