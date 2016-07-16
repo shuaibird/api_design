@@ -9,12 +9,14 @@ function updateItemId() {
 
 var express = require('express')
 var bodyParser = require('body-parser')
+var morgan = require('morgan')
 
 var app = express()
 var port = 8080
 
 
 // application-level middlewares: function
+app.use(morgan('combined'))
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -45,20 +47,17 @@ itemsRouter.param('id', (req, res, next, id) => {
 itemsRouter.route('/')
   .get((req, res) => {
     res.json(items)
-    console.log('GET /items')
   })
   .post(updateItemId(), (req, res) => {
     var item = req.body
     item.id = itemId
     items.push(item)
     res.json(item)
-    console.log('POST /items')
   })
 
 itemsRouter.route('/:id')
   .get((req, res) => {
     res.json(req.item)
-    console.log(`GET /items/${req.item.id}`)
   })
   .put((req, res) => {
     var updatedItem = req.body
@@ -67,12 +66,10 @@ itemsRouter.route('/:id')
         Object.assign(item, updatedItem)
         res.json(item)
       }
-    console.log(`PUT /items/${req.item.id}`)
   })
   .delete((req, res) => {
     items = items.filter(item => item.id !== req.item.id)
     res.json(req.item)
-    console.log(`DELETE /items/${req.item.id}`)
   })
 
 
