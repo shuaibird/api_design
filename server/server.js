@@ -12,7 +12,6 @@ var bodyParser = require('body-parser')
 var morgan = require('morgan')
 
 var app = express()
-var port = 8080
 
 
 // application-level middlewares: function
@@ -77,8 +76,5 @@ app.use((err, req, res, next) => {
   if (err)
     res.status(500).send(err)
 })
-
-
-app.listen(port, () => console.log(`listen on port: ${port}`))
 
 module.exports = app
