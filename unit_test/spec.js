@@ -1,6 +1,7 @@
 const TEST_DATA = {name: 'Shuabird'}
 
-var app = require('./server')
+var app = require('../server/server')
+
 var supertest = require('supertest')
 var expect = require('chai').expect
 
